@@ -58,6 +58,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.jomalonemobileapplication.core.ui.CartViewModel
 import com.example.jomalonemobileapplication.theme.Cormorant
 
 @Composable
@@ -77,6 +78,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JoMaloneMobileApplicationTheme {
                 val authViewModel: AuthViewModel = viewModel()
+                val cartViewModel: CartViewModel = viewModel()
                 val navController = rememberNavController()
 
                 // Get current route
@@ -131,6 +133,9 @@ class MainActivity : ComponentActivity() {
                     NavigationApp(
                         authViewModel = authViewModel,
                         navController = navController,
+                        onAddToCart = {cartItem ->
+                            cartViewModel.addItemToCart(cartItem)
+                        },
                         modifier = Modifier.padding(
                             // Only apply padding if bars are showing
                             top = if (shouldShowTopBar) innerPadding.calculateTopPadding() else 0.dp,

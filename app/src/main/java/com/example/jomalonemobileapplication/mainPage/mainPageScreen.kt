@@ -156,15 +156,11 @@ fun JoMaloneMainPage(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val sampleButtons = listOf(
-                    "Raspberry Ripple Cologne" to 100.00,
-                    "Orange Blossom Cologne" to 120.00,
-                    "Peony & Blush Suede" to 80.00
-                )
+                val sampleItems = getSampleCartItems()
 
-                items(sampleButtons) { (name, price) ->
+                items(sampleItems) { cartItem ->
                     Button(
-                        onClick = onAddToCart,
+                        onClick = { onAddToCart(cartItem) }, // ✅ pass the CartItem
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Black,
                             contentColor = Color.White
@@ -172,13 +168,14 @@ fun JoMaloneMainPage(
                         modifier = Modifier.width(200.dp) // keep consistent size
                     ) {
                         Text(
-                            text = "Add $name (RM ${"%.2f".format(price)})",
+                            text = "Add ${cartItem.name} (RM ${"%.2f".format(cartItem.unitPrice)})",
                             fontSize = 13.sp
                         )
                     }
                 }
             }
         }
+
 
 
         item {
