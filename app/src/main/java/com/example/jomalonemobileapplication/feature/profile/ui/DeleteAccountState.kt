@@ -6,10 +6,6 @@ data class DeleteAccountState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 ) {
-
-    //Helper function to reset all state to default values
-    fun reset() = DeleteAccountState()
-
     //Helper function to show loading state
     fun loading() = copy(isLoading = true, errorMessage = null)
 

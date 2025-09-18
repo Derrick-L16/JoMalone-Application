@@ -41,6 +41,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _deleteAccountState = MutableStateFlow(DeleteAccountState())
     val deleteAccountState: StateFlow<DeleteAccountState> = _deleteAccountState.asStateFlow()
 
+    private val _showLogoutDialog = MutableStateFlow(false)
+    val showLogoutDialog: StateFlow<Boolean> = _showLogoutDialog.asStateFlow()
+
     // ===================================== COMBINED SIGN IN & SIGNUP FUNCTION(display error message on time) =====================================
     fun updateEmailOnTime(email: String, isSignUp: Boolean = false) {
         val errorMessage = if (email.isBlank()) "Email cannot be empty" else null
@@ -523,7 +526,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // ===================================== ACCOUNT DELETION FUNCTION =====================================
     // ===================================== DELETE ACCOUNT FUNCTIONS =====================================
     fun reauthenticateAndDelete(
         password: String,
@@ -563,7 +565,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun cancelAccountDeletion() {
-        _deleteAccountState.value = DeleteAccountState() // 重置为默认状态
+        _deleteAccountState.value = DeleteAccountState()
     }
 
     fun deleteAccountWithPassword(password: String) {
@@ -596,6 +598,21 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clearDeleteAccountError() {
         _deleteAccountState.value = _deleteAccountState.value.copy(errorMessage = null)
+    }
+
+    // ===================================== LOGOUT FUNCTION =====================================
+
+    fun showLogoutConfirmation() {
+        _showLogoutDialog.value = true
+    }
+
+    fun dismissLogoutConfirmation() {
+        _showLogoutDialog.value = false
+    }
+
+    fun performLogout() {
+        repository.signOut()
+        _showLogoutDialog.value = false
     }
 
 
