@@ -2,9 +2,7 @@ package com.example.jomalonemobileapplication.feature.perfumeCustomization.prese
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +26,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +41,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
@@ -82,7 +78,6 @@ fun PerfumeNameScreen(
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-//                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
@@ -120,7 +115,6 @@ fun PerfumeNameScreen(
             item {
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Perfume name input
                 OutlinedTextField(
                     value = currentName,
                     onValueChange = { currentName = it },
@@ -141,7 +135,6 @@ fun PerfumeNameScreen(
 
             item{
                 Spacer(modifier = Modifier.height(40.dp))
-                // Action buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly

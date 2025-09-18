@@ -1,18 +1,14 @@
 package com.example.jomalonemobileapplication.feature.scentTest.presentation
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,7 +30,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
@@ -44,11 +38,11 @@ import com.example.jomalonemobileapplication.theme.JoMaloneMobileApplicationThem
 import com.example.jomalonemobileapplication.theme.LightBrown
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentTestResult
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentType
-import com.example.jomalonemobileapplication.feature.scentTest.presentation.ScentTestViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScentResultScreen(
+    modifier : Modifier = Modifier,
     result : ScentTestResult,
     onCustomizeClick: () -> Unit,
     onRetakeTest: () -> Unit,
@@ -66,10 +60,10 @@ fun ScentResultScreen(
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold)
             },
-                modifier = Modifier.padding(bottom = 20.dp),
                 colors = TopAppBarDefaults.topAppBarColors( containerColor = Background)
             )
         },
+        modifier = modifier,
         containerColor = Background
     ) { innerPadding ->
         LazyColumn(

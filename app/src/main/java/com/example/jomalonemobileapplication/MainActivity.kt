@@ -89,10 +89,10 @@ class MainActivity : ComponentActivity() {
                     "SignUp",
                     "ForgotPassword",
                     "Admin",
-                    "ScentTest",   // test
-                    "ScentResults",
+                    "ScentTest",
                     "PerfumeCustomization",
-                    "ScentPreference"
+                    "ScentPreference",
+                    "CustomizationHistory"
                 )
 
                 // Define routes where you want to hide only the bottom bar
@@ -103,10 +103,10 @@ class MainActivity : ComponentActivity() {
                     "ContactUs",
                     "ShoppingCart",
                     "Checkout",
-                    "ScentTest",   // test
-                    "ScentResults",
+                    "ScentTest",
                     "PerfumeCustomization",
-                    "ScentPreference"
+                    "ScentPreference",
+                    "CustomizationHistory"
 
                 )
 

@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -56,6 +57,7 @@ fun ProfileContent(
     onNavigateToFavouritePerfume: () -> Unit = {},
     onNavigateToPaymentHistory: () -> Unit = {},
     onNavigateToContactUs: () -> Unit = {},
+    onNavigateToScentPreference: () -> Unit = {},
     onNavigateToCustomizationHistory: () -> Unit,
     onNavigateToLogout: () -> Unit = {},
     onAccountDeleted: () -> Unit = {},
@@ -118,6 +120,10 @@ fun ProfileContent(
         Spacer(modifier = Modifier.height(10.dp))
 
         ContactUsButton(onClick = onNavigateToContactUs)
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        ScentPreferenceButton(onClick = onNavigateToScentPreference)
 
         Spacer(modifier = Modifier.height(10.dp))
 

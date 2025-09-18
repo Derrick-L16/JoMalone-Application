@@ -28,11 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jomalonemobileapplication.theme.Cormorant
 import com.example.jomalonemobileapplication.theme.DarkBrown
 import com.example.jomalonemobileapplication.theme.LightBrown
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.domain.model.CustomizationOption
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.domain.model.CustomizationQuestion
+import com.example.jomalonemobileapplication.theme.Cream
 
 @Composable
 fun ImageBasedQuestion(
@@ -43,7 +43,6 @@ fun ImageBasedQuestion(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
     ){
         Text(
             text = stringResource(question.questionResId),
@@ -87,7 +86,7 @@ fun ImageOptionCard(
             .border(width = 2.dp, color = DarkBrown, shape = MaterialTheme.shapes.medium),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = LightBrown, contentColor = Color.Black
+            containerColor = Cream, contentColor = Color.Black
         )
 
     ){
