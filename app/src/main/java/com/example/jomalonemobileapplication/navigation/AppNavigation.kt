@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.jomalonemobileapplication.AppDatabase
+import com.example.jomalonemobileapplication.core.data.entity.CartItem
 import com.example.jomalonemobileapplication.core.data.entity.Order
 import com.example.jomalonemobileapplication.core.data.mapper.CartItemMapper
 import com.example.jomalonemobileapplication.core.data.repository.CartRepositoryImpl
@@ -45,6 +46,7 @@ import com.example.jomalonemobileapplication.feature.profile.ui.ScentPreferenceS
 fun NavigationApp(
     authViewModel: AuthViewModel,
     navController: NavHostController,
+    onAddToCart: (CartItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -111,6 +113,7 @@ fun NavigationApp(
                 onNavigateToShoppingCart = {
                     navController.navigate("ShoppingCart")
                 },
+                onAddToCart = onAddToCart,
                 modifier = modifier
             )
         }

@@ -75,9 +75,6 @@ fun CheckoutScreen(
     modifier: Modifier = Modifier.background(Background)
 ) {
 
-    var selectedPaymentId by remember { mutableIntStateOf(uiState.selectedPaymentMethod?.id ?: 0) }
-    var selectedAddressId by remember { mutableIntStateOf(uiState.defaultAddress?.id ?: 0) }
-
     var showAddAddressDialog by remember { mutableStateOf(false) }
     var showAddPaymentDialog by remember { mutableStateOf(false) }
 
@@ -178,20 +175,16 @@ fun CheckoutScreen(
                         uiState.deliveryAddresses.forEach { address ->
                             AddressCard(
                                 address = address,
-                                isSelected = address.id == selectedAddressId,
+                                isSelected = address.id == uiState.defaultAddress?.id,
                                 onSelect = {
-                                    selectedAddressId = address.id
                                     onSetDefaultAddress(address.id)
                                 },
                                 onDelete = {
-                                    if (address.id == selectedAddressId) {
-                                            selectedAddressId = 0
-                                    }
                                     onDeleteDeliveryAddress(address)
                                 },
                                 showDelete = uiState.deliveryAddresses.size > 1,
 
-                            )
+                                )
                         }
                     }
                 } else {
@@ -214,15 +207,11 @@ fun CheckoutScreen(
                         uiState.paymentMethods.forEach { payment ->
                             PaymentMethodCard(
                                 paymentMethod = payment,
-                                isSelected = payment.id == selectedPaymentId,
+                                isSelected = payment.id == uiState.selectedPaymentMethod?.id,
                                 onSelect = {
-                                    selectedPaymentId = payment.id
                                     onSelectPaymentMethod(payment.id)
                                 },
                                 onDelete = {
-                                    if (payment.id == selectedPaymentId) {
-                                        selectedPaymentId = 0
-                                    }
                                     onDeletePaymentMethod(payment)
                                 },
                                 showDelete = uiState.paymentMethods.size > 1
@@ -1409,12 +1398,7 @@ fun CartItemCard(cartItem: CartItem) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .border(
-                width = 2.dp,
-                color = DarkBrown,
-                shape = RoundedCornerShape(8.dp)
-    ),
+            .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Image(
@@ -1671,10 +1655,6 @@ fun JoMaloneCheckoutScreenPreview() {
             uiState = getSampleCheckoutUiState(),
 
 
-        )
+            )
     }
 }
-
-// Use in order history to convert milliseconds to date
-//val date = Date(order.orderDate)
-//val formatted = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date)

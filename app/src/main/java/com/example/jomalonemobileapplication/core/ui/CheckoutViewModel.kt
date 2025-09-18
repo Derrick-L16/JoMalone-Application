@@ -30,59 +30,68 @@ class CheckoutViewModel (
     private val _uiState = MutableStateFlow(CheckoutUiState())
     val uiState: StateFlow<CheckoutUiState> = _uiState.asStateFlow()
     init {
-        loadCheckoutData()
+        collectDataFlows()
     }
 
-    private fun loadCheckoutData() {
+    private fun collectDataFlows() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            val userId = authViewModel.getCurrentUserId()
 
-            try {
-                val cartItemsDeferred = async { cart.getCurrentCartItems() }
-                val paymentMethodsDeferred = async {
-                    authViewModel.getCurrentUserId()?.let { uid ->
-                        payment.getPaymentMethods(uid).first()
-                    } ?: emptyList()
+            if (userId != null) {
+                // Get cart items once (suspend function, called within coroutine)
+                val cartItems = cart.getCurrentCartItems()
+
+                // Update UI with cart items immediately
+                updateUiStateWithCartItems(cartItems, userId)
+
+                // Collect the flows that can change
+                combine(
+                    address.getDeliveryAddresses(userId),
+                    payment.getPaymentMethods(userId)
+                ) { addresses, paymentMethods ->
+                    Pair(addresses, paymentMethods)
+                }.collect { (addresses, paymentMethods) ->
+                    updateUiStateWithAddressesAndPayments(addresses, paymentMethods)
                 }
-                    val addressesDeferred = async { address.getDeliveryAddresses().first() }
-
-                val cartItems = cartItemsDeferred.await()
-                val paymentMethods = paymentMethodsDeferred.await()
-                val addresses = addressesDeferred.await()
-
-                val subTotal = cartItems.sumOf { it.totalPrice }
-                val tax = subTotal * 0.06
-                val delivery = 5.0
-                val total = subTotal + tax + delivery
-
-                val order = Order(
-                    subTotal = subTotal,
-                    tax = tax,
-                    estimatedDelivery = delivery,
-                    total = total,
-                    orderItems = emptyList(), // you can map cartItems if needed
-                    userId = authViewModel.getCurrentUserId()
-                )
-
-                val selectedPayment = payment.getSelectedPaymentMethod()
-                val defaultAddress = address.getDefaultAddress()
-
-                _uiState.update {
-                    it.copy(
-                        cartItems = cartItems,
-                        order = order,
-                        paymentMethods = paymentMethods,
-                        selectedPaymentMethod = selectedPayment,
-                        deliveryAddresses = addresses,
-                        defaultAddress = defaultAddress,
-                        isLoading = false
-                    )
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(error = e.message, isLoading = false)
-                }
+            } else {
+                _uiState.update { it.copy(error = "User not authenticated", isLoading = false) }
             }
+        }
+    }
+
+    private fun updateUiStateWithCartItems(cartItems: List<CartItem>, userId: String) {
+        val subTotal = cartItems.sumOf { it.totalPrice }
+        val tax = subTotal * 0.06
+        val delivery = 5.0
+        val total = subTotal + tax + delivery
+
+        val order = Order(
+            subTotal = subTotal,
+            tax = tax,
+            estimatedDelivery = delivery,
+            total = total,
+            orderItems = emptyList(),
+            userId = userId
+        )
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                cartItems = cartItems,
+                order = order
+            )
+        }
+    }
+
+    private fun updateUiStateWithAddressesAndPayments(
+        addresses: List<DeliveryAddress>,
+        paymentMethods: List<PaymentMethod>
+    ) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                deliveryAddresses = addresses,
+                paymentMethods = paymentMethods,
+                isLoading = false
+            )
         }
     }
 
