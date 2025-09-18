@@ -60,6 +60,9 @@ class CartRepositoryImpl @Inject constructor(
         cartDao.clearSelectedItems()
     }
 
+    override suspend fun clearCart() {
+        cartDao.clearCart()
+    }
 
 
     // Save cart
@@ -93,6 +96,4 @@ class CartRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
-
-
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,11 +30,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -72,6 +75,8 @@ fun ShoppingCartScreen(
     onSelectAll: (Boolean) -> Unit,
     onProceedButtonClicked: () -> Unit,
     onBack: () -> Unit,
+    onDismissError: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -118,32 +123,25 @@ fun ShoppingCartScreen(
             )
         }
 
+        // Error Display
+        uiState.error?.let { errorMessage ->
+            ErrorCard(
+                message = errorMessage,
+                onDismiss = onDismissError,
+                onRetry = onRetry
+            )
+        }
+
+        // Loading State
+        if (uiState.isLoading && uiState.items.isEmpty()) {
+            LoadingState(modifier = Modifier.weight(1f))
+        }
         // Empty State
-        if (uiState.isEmpty) {
-            Box(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Your cart is empty",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "Add some items to get started",
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-            }
-        } else {
-            // Product List
+        else if (uiState.isEmpty) {
+            EmptyCartState(modifier = Modifier.weight(1f))
+        }
+        // Content State
+        else {
             LazyColumn(
                 modifier = modifier.weight(1f),
                 contentPadding = PaddingValues(vertical = 8.dp)
@@ -152,6 +150,7 @@ fun ShoppingCartScreen(
                     CartItemRow(
                         item = item,
                         isSelected = uiState.selectedIds.contains(item.cartItemId),
+                        isOperationInProgress = uiState.operationInProgress.contains(item.cartItemId),
                         onCloseClick = { onRemoveItem(item) },
                         onIncreaseClick = { onIncreaseQuantity(item) },
                         onDecreaseClick = { onDecreaseQuantity(item) },
@@ -173,6 +172,77 @@ fun ShoppingCartScreen(
     }
 }
 
+@Composable
+fun ErrorCard(
+    message: String,
+    onDismiss: () -> Unit,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Error",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFD32F2F)
+                )
+                Text(
+                    text = message,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666)
+                )
+            }
+
+            Row {
+                TextButton(onClick = onRetry) {
+                    Text("Retry", color = Color(0xFFD32F2F))
+                }
+                IconButton(onClick = onDismiss) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Dismiss error",
+                        tint = Color(0xFFD32F2F)
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Loading State Component
+@Composable
+fun LoadingState(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator(
+                color = Color(0xFF8B4513),
+                modifier = Modifier.size(32.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Loading your cart...",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+        }
+    }
+}
 
 
 
@@ -196,6 +266,8 @@ fun ShoppingCartRoute(
             onSelectAll = {},
             onProceedButtonClicked = onNavigateToCheckout,
             onBack = onBack,
+            onDismissError = {},
+            onRetry = {},
             modifier = modifier
         )
     } else {
@@ -222,6 +294,8 @@ fun ShoppingCartRoute(
             onProceedButtonClicked = onNavigateToCheckout,
             onBack = onBack,
             onItemClick = onItemClick,
+            onDismissError = viewModel::dismissError,
+            onRetry = viewModel::retryLastOperation,
             modifier = modifier
         )
     }
@@ -273,6 +347,7 @@ fun getSampleCartUiState(): CartUiState {
 fun CartItemRow(
     item: CartItem,
     isSelected: Boolean = false,
+    isOperationInProgress: Boolean = false,
     onCloseClick: () -> Unit = {},
     onIncreaseClick: () -> Unit = {},
     onDecreaseClick: () -> Unit = {},
@@ -288,138 +363,160 @@ fun CartItemRow(
         colors = CardDefaults.cardColors(containerColor = Cream),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .clickable { onItemClick(item) },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = isSelected,
-                onCheckedChange = onCheckedChange,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF8B4513),
-                    uncheckedColor = Color.Gray
-                )
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            // Product image
-            ProductImageWithResourceId(
-                imageRes = item.imageRes.toString(),
-                productName = item.name
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // Product Details
-            Column(modifier = Modifier.weight(1f)) {
-                // Product name and remove button
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Text(
-                        text = item.name,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.weight(1f)
+        Box {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .clickable(enabled = !isOperationInProgress) { onItemClick(item) },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = if (!isOperationInProgress) onCheckedChange else {
+                        {}
+                    },
+                    enabled = !isOperationInProgress,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color(0xFF8B4513),
+                        uncheckedColor = Color.Gray
                     )
-
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(Color(0xFFFFF7CE), shape = CircleShape)
-                            .clickable { onCloseClick() }
-                            .border(1.dp, Color.Gray, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Remove item",
-                            modifier = Modifier.size(16.dp),
-                            tint = Color.Gray
-                        )
-                    }
-
-
-                }
-
-                Text(
-                    text = "Size: ${item.size}",
-                    fontSize = 12.sp,
-                    color = Color.Gray
                 )
 
-                Spacer(modifier = Modifier.padding(4.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
-                // Change quantity
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                // Product image
+                SafeProductImage(
+                    imageRes = item.imageRes,
+                    productName = item.name
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Product Details
+                Column(modifier = Modifier.weight(1f)) {
+                    // Product name and remove button
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedButton(
-                            onClick = onDecreaseClick,
-                            modifier = Modifier.size(24.dp),
-                            contentPadding = PaddingValues(0.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = Color.White
-                            ),
-                        ) {
-                            Text(
-                                text = "-",
-                                fontSize = 16.sp,
-                                color = Color.Black
-                            )
-                        }
-
-                        Text(
-                            text = item.quantity.toString(),
-                            modifier = Modifier
-                                .width(32.dp),
-                            textAlign = TextAlign.Center,
-                            fontSize = 16.sp
-                        )
-
-                        OutlinedButton(
-                            onClick = onIncreaseClick,
-                            modifier = Modifier.size(24.dp),
-                            contentPadding = PaddingValues(0.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = Color.White
-                            ),
-                        ) {
-                            Text(
-                                text = "+",
-                                fontSize = 16.sp,
-                                color = Color.Black
-                            )
-                        }
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.End
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
                     ) {
                         Text(
-                            text = "RM %.2f".format(item.unitPrice),
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-
-                        Text(
-                            text = "RM %.2f".format(item.totalPrice),
+                            text = item.name,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color.Black
+                            modifier = Modifier.weight(1f)
                         )
+
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .background(Color(0xFFFFF7CE), shape = CircleShape)
+                                .clickable(enabled = !isOperationInProgress) { onCloseClick() }
+                                .border(1.dp, Color.Gray, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Remove item",
+                                modifier = Modifier.size(16.dp),
+                                tint = if (isOperationInProgress) Color.Gray.copy(alpha = 0.5f) else Color.Gray
+                            )
+                        }
+
+
                     }
+
+                    Text(
+                        text = "Size: ${item.size}",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+
+                    Spacer(modifier = Modifier.padding(4.dp))
+
+                    // Change quantity
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedButton(
+                                onClick = onDecreaseClick,
+                                enabled = !isOperationInProgress && item.quantity > 1,
+                                modifier = Modifier.size(24.dp),
+                                contentPadding = PaddingValues(0.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = Color.White
+                                ),
+                            ) {
+                                Text(
+                                    text = "-",
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                            }
+
+                            Text(
+                                text = item.quantity.toString(),
+                                modifier = Modifier.width(32.dp),
+                                textAlign = TextAlign.Center,
+                                fontSize = 16.sp
+                            )
+
+                            OutlinedButton(
+                                onClick = onIncreaseClick,
+                                enabled = !isOperationInProgress,
+                                modifier = Modifier.size(24.dp),
+                                contentPadding = PaddingValues(0.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = Color.White
+                                ),
+                            ) {
+                                Text(
+                                    text = "+",
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                            }
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text(
+                                text = "RM %.2f".format(item.unitPrice),
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+
+                            Text(
+                                text = "RM %.2f".format(item.totalPrice),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Black
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (isOperationInProgress) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.White.copy(alpha = 0.3f))
+                        .clickable(enabled = false) {},
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color(0xFF8B4513),
+                        strokeWidth = 2.dp
+                    )
                 }
             }
         }
@@ -459,6 +556,7 @@ fun BottomSection(
                     Checkbox(
                         checked = uiState.isAllSelected,
                         onCheckedChange = onSelectAll,
+                        enabled = uiState.items.isNotEmpty() && !uiState.isLoading,
                         colors = CheckboxDefaults.colors(
                             checkedColor = Color(0xFF8B4513)
                         )
@@ -477,53 +575,40 @@ fun BottomSection(
         // Payment Button
         Button(
             onClick = onProceedButtonClicked,
-            enabled = !uiState.isEmpty && uiState.selectedItems.isNotEmpty(),
+            enabled = !uiState.isEmpty &&
+                    uiState.selectedItems.isNotEmpty() &&
+                    !uiState.isLoading &&
+                    uiState.operationInProgress.isEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Black,
-                contentColor = Color.White
+                contentColor = Color.White,
+                disabledContainerColor = Color.Gray,
+                disabledContentColor = Color.White
             ),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text(
-                text = if (uiState.selectedItems.isEmpty()) {
-                    "Select items to checkout"
-                } else {
-                    "Proceed To Payment"
-                },
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
-
-@Composable
-fun ProductImageWithResourceId(
-    imageRes: String,
-    productName: String,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .size(70.dp)
-            .background(Cream)
-            .border(1.dp, Color.Gray.copy(alpha = 0.3f)),
-        contentAlignment = Alignment.Center
-    ) {
-
-        val resourceId = imageRes.toIntOrNull()
-        if (resourceId != null && resourceId != 0) {
-            Image(
-                painter = painterResource(id = resourceId),
-                contentDescription = productName,
-                modifier = Modifier.size(70.dp),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            ProductImagePlaceholder()
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Loading...")
+            } else {
+                Text(
+                    text = when {
+                        uiState.selectedItems.isEmpty() -> "Select items to checkout"
+                        uiState.operationInProgress.isNotEmpty() -> "Processing..."
+                        else -> "Proceed To Payment"
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }
@@ -536,6 +621,97 @@ private fun ProductImagePlaceholder() {
             .size(40.dp)
             .background(Cream)
     )
+}
+
+@Composable
+fun EmptyCartState(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.empty_shopping_bag),
+                contentDescription = null,
+                modifier = Modifier.size(64.dp),
+                tint = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Your cart is empty",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = "Add some items to get started",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun SafeProductImage(
+    imageRes: Int,
+    productName: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(70.dp)
+            .background(Cream)
+            .border(1.dp, Color.Gray.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        // Check if resource exists
+        val context = LocalContext.current
+        val drawable = remember(imageRes) {
+            try {
+                context.getDrawable(imageRes)
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        if (drawable != null) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = productName,
+                modifier = Modifier.size(70.dp),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            ProductImageError()
+        }
+    }
+}
+
+@Composable
+private fun ProductImageError() {
+    Box(
+        modifier = Modifier
+            .size(70.dp)
+            .background(Color.Gray.copy(alpha = 0.1f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                imageVector = Icons.Default.BrokenImage, // You'll need to import this
+                contentDescription = "Image not found",
+                tint = Color.Gray,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = "No image",
+                fontSize = 8.sp,
+                color = Color.Gray
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -552,6 +728,8 @@ fun ShoppingCartScreenPreview() {
             onSelectItem = { _, _ -> },
             onSelectAll = {},
             onProceedButtonClicked = {},
+            onDismissError = {},
+            onRetry = {},
             onBack = {}
         )
     }

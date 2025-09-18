@@ -7,6 +7,7 @@ import com.example.jomalonemobileapplication.AppDatabase
 import com.example.jomalonemobileapplication.feature.login.data.AuthRepositoryImpl
 import com.example.jomalonemobileapplication.feature.login.data.UserEntity
 import com.example.jomalonemobileapplication.feature.profile.ui.DeleteAccountState
+import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentType
 import com.google.firebase.auth.EmailAuthProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

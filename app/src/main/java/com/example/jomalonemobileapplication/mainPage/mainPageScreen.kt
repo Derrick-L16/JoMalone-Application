@@ -27,6 +27,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -43,6 +45,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.jomalonemobileapplication.R
+import com.example.jomalonemobileapplication.core.data.entity.CartItem
 import com.example.jomalonemobileapplication.data.Perfume
 
 // import coil.compose.AsyncImage // Uncomment if you use Coil for image loading
@@ -53,9 +57,11 @@ import java.util.UUID // CORRECT IMPORT FOR UUID
 fun JoMaloneMainPage(
     onNavigateToShoppingCart: () -> Unit = {},
     navController: NavController? = null,
+    onAddToCart: (CartItem) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Sample Perfume data with more items to ensure scrolling
+    val sampleItems = getSampleCartItems()
     val fragrantFavourites = List(10) { index ->
         Perfume(
             id = UUID.randomUUID().toString(),
@@ -150,14 +156,30 @@ fun JoMaloneMainPage(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(fragrantFavourites, key = { perfume -> perfume.id }) { perfume ->
-                    PerfumeCard(perfume = perfume) {
-                        // TODO: Handle perfume click (e.g., navigate to details)
-                        navController?.navigate("perfumeDetail/${perfume.id}") // Example navigation
+                val sampleButtons = listOf(
+                    "Raspberry Ripple Cologne" to 100.00,
+                    "Orange Blossom Cologne" to 120.00,
+                    "Peony & Blush Suede" to 80.00
+                )
+
+                items(sampleButtons) { (name, price) ->
+                    Button(
+                        onClick = onAddToCart,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black,
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier.width(200.dp) // keep consistent size
+                    ) {
+                        Text(
+                            text = "Add $name (RM ${"%.2f".format(price)})",
+                            fontSize = 13.sp
+                        )
                     }
                 }
             }
         }
+
 
         item {
             Spacer(modifier = Modifier.height(32.dp))
@@ -200,6 +222,32 @@ fun SectionHeader(title: String) {
         color = Color.Black, // Consider MaterialTheme.colorScheme.onSurfaceVariant
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp)
     )
+}
+
+@Composable
+fun AddToCartButtons(items: List<CartItem>, onAddToCart: (CartItem) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        items.forEach { cartItem ->
+            Button(
+                onClick = { onAddToCart(cartItem) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Add ${cartItem.name} to Cart (RM ${"%.2f".format(cartItem.unitPrice)})",
+                    fontSize = 14.sp
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -331,6 +379,42 @@ fun ServiceButton(
         )
     }
 }
+
+fun getSampleCartItems(): List<CartItem> {
+    return listOf(
+        CartItem(
+            cartItemId = 1,
+            productId = 1,
+            name = "Raspberry Ripple Cologne",
+            size = "100 ml",
+            imageRes = R.drawable.raspberry,
+            quantity = 2,
+            isSelected = true,
+            unitPrice = 100.00
+        ),
+        CartItem(
+            cartItemId = 2,
+            productId = 2,
+            name = "Orange Blossom Cologne",
+            size = "100 ml",
+            imageRes = R.drawable.orange,
+            quantity = 1,
+            isSelected = false,
+            unitPrice = 120.00
+        ),
+        CartItem(
+            cartItemId = 3,
+            productId = 3,
+            name = "Peony & Blush Suede",
+            size = "50 ml",
+            imageRes = R.drawable.peony,
+            quantity = 3,
+            isSelected = true,
+            unitPrice = 80.00
+        )
+    )
+}
+
 
 @Preview(showBackground = true, name = "Jo Malone Main Page Preview")
 @Composable

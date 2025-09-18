@@ -13,6 +13,7 @@ interface CartRepository {
     suspend fun updateCartItem(item: CartItem)
     suspend fun updateSelection(id: Int, isSelected: Boolean)
     suspend fun updateAllSelection(isSelected: Boolean)
+    suspend fun clearCart()
     suspend fun storeCart(userId: String, cartItems: List<CartItem>): Result<String>
     suspend fun getCart(userId: String): Result<Map<String, Any>>
 }
