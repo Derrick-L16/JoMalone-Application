@@ -15,23 +15,8 @@ data class ScentTestState(
     val userSelections: Map<Int, ScentType> = emptyMap(),
     val isTestCompleted: Boolean = false,
     val result: ScentType? = null
-){
-    fun addSelection(questionId: Int, scentType: ScentType) : ScentTestState{
-        return copy(userSelections = userSelections + (questionId to scentType))
-    }
+)
 
-    fun moveToNextQuestion(): ScentTestState {
-        return copy(currentQuestionIndex = currentQuestionIndex + 1)
-    }
-
-    fun isCurrentQuestionAnswered(questionId: Int): Boolean {
-        return userSelections.containsKey(questionId)
-    }
-
-    fun completeTest(finalResult: ScentType): ScentTestState {
-        return copy(isTestCompleted = true, result = finalResult)
-    }
-}
 class ScentTestViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ScentTestState())
     val uiState: StateFlow<ScentTestState> = _uiState.asStateFlow()
