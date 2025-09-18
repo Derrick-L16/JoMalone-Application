@@ -4,6 +4,7 @@ package com.example.jomalonemobileapplication.feature.scentTest.presentation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Row
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 import com.example.jomalonemobileapplication.theme.Cormorant
 import com.example.jomalonemobileapplication.theme.DarkBrown
@@ -39,6 +44,7 @@ import com.example.jomalonemobileapplication.theme.Cream
 
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentQuestion
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.QuestionType
+import com.example.jomalonemobileapplication.theme.LightBrown
 
 
 @Composable
@@ -85,16 +91,24 @@ fun ButtonBasedQuestion(
     question : ScentQuestion,
     onOptionSelected: (Int) -> Unit,
 ){
+    var selectedIndex by remember(question.questionResId) { mutableStateOf(-1) }
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)){
         question.options.forEachIndexed { index, option ->
             OutlinedButton(
-                onClick = { onOptionSelected(index)},
+                onClick = {
+                    selectedIndex = index
+                    onOptionSelected(index) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 6.dp)
                     .height(50.dp),
+
                 border = BorderStroke(2.dp, DarkBrown),
-                colors = ButtonDefaults.buttonColors(containerColor = Cream, contentColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (selectedIndex == index) LightBrown.copy(alpha = 0.8f) else Cream
+                    , contentColor = Color.Black
+                ),
                 shape = MaterialTheme.shapes.medium,
             ){
                 Text(
@@ -110,6 +124,8 @@ fun ImageButtonQuestion(
     question: ScentQuestion,
     onOptionSelected: (Int) -> Unit
 ) {
+
+    var selectedIndex by remember(question.questionResId) { mutableStateOf(-1) }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -124,7 +140,9 @@ fun ImageButtonQuestion(
                     val optionIndex = rowIndex * 2 + colIndex
 
                     Card(
-                        onClick = { onOptionSelected(optionIndex) },
+                        onClick = {
+                            selectedIndex = optionIndex
+                            onOptionSelected(optionIndex) },
                         modifier = Modifier
                             .width(170.dp)
                             .height(150.dp)
@@ -135,7 +153,7 @@ fun ImageButtonQuestion(
                             ),
                         shape = MaterialTheme.shapes.medium,
                         colors = CardDefaults.cardColors(
-                            containerColor = Cream,
+                            containerColor = if (selectedIndex == optionIndex) LightBrown.copy(alpha = 0.8f) else Cream,
                             contentColor = Color.Black
                         )
                     ) {
