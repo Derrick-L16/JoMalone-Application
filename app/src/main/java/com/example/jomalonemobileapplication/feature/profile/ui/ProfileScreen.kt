@@ -59,9 +59,9 @@ fun ProfileContent(
     onNavigateToFavouritePerfume: () -> Unit = {},
     onNavigateToPaymentHistory: () -> Unit = {},
     onNavigateToContactUs: () -> Unit = {},
-    onNavigateToScentPreference: () -> Unit = {},
     onNavigateToCustomizationHistory: () -> Unit,
     onNavigateToLogout: () -> Unit = {},
+    onNavigateToScentPreference:()-> Unit = {},
     onAccountDeleted: () -> Unit = {},
 ) {
     val viewModel: AuthViewModel = viewModel()

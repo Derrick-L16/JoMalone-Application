@@ -163,6 +163,7 @@ fun SuccessDialog(
 ){
     Dialog(
         onDismissRequest = { } // Prevent dismissing by clicking outside
+
     ) {
         Card(
             modifier = Modifier
