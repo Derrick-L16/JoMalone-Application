@@ -6,8 +6,6 @@ enum class ScentType {
     WOODY,
     SPICY;
 
-
-    //helper function to get display name
     fun getDisplayName(): String {
         return when (this) {
             CITRUS -> "Citrus"

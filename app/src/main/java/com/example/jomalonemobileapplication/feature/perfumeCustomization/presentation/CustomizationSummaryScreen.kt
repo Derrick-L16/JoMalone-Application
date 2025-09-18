@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,14 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
 import com.example.jomalonemobileapplication.theme.DarkBrown
 import com.example.jomalonemobileapplication.theme.JoMaloneMobileApplicationTheme
 import com.example.jomalonemobileapplication.theme.LightBrown
-import com.example.jomalonemobileapplication.core.ui.CartViewModel
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.domain.model.ScentLayer
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +66,14 @@ fun CustomizationSummaryScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateToMain) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back to main"
+                        )
+                    }
                 },
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Background)

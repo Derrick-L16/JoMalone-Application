@@ -1,6 +1,5 @@
 package com.example.jomalonemobileapplication.feature.perfumeCustomization.data.repository
 
-import androidx.compose.ui.res.stringResource
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.domain.model.CustomizationOption
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.domain.model.CustomizationQuestion

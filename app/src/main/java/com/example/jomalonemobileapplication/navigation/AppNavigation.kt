@@ -180,7 +180,6 @@ fun NavigationApp(
         }
 
         composable("ScentTest"){
-//            TestScreenNavigation()
             val scentTestViewModel: ScentTestViewModel = viewModel()
 
             ScentTestScreen(
@@ -189,7 +188,6 @@ fun NavigationApp(
                     authViewModel.updateUserScentPreference(result) {
                         navController.navigate("ScentResult/${result.name}")
                     }
-//                    navController.navigate("ScentResult/${result.name}")
                 },
                 onNavigateToMain = {
                     navController.navigate("HomePage") {
@@ -212,15 +210,12 @@ fun NavigationApp(
 
         composable("ScentResult/{scentType}") { backStackEntry ->
             val scentTypeString = backStackEntry.arguments?.getString("scentType")
-//            val scentType = scentTypeString?.let {
-//                enumValueOf<ScentType>(it)
-//            } ?: ScentType.CITRUS
 
             val scentType = scentTypeString?.let {
                 try {
                     enumValueOf<ScentType>(it)
                 } catch (e: IllegalArgumentException) {
-                    ScentType.CITRUS // fallback
+                    ScentType.CITRUS
                 }
             } ?: ScentType.CITRUS
 
@@ -232,7 +227,6 @@ fun NavigationApp(
                     navController.navigate("PerfumeCustomization")
                 },
                 onRetakeTest = {
-                    // Go back to scent test
                     navController.navigate("ScentTest") {
                         popUpTo("ScentTest") { inclusive = true }
                     }
@@ -243,10 +237,8 @@ fun NavigationApp(
                     }
                 },
                 onSavePreference = { scentType ->
-//                    authViewModel.updateUserScentPreference(scentType)
-//                    {
-//                    }
-                }
+                },
+                modifier = modifier
             )
         }
 
@@ -258,12 +250,10 @@ fun NavigationApp(
             }
             val factory = remember { CartViewModelFactory(repository) }
 
-//            val customizationViewModel: CustomizationViewModel = viewModel()    // delete later
             val cartViewModel: CartViewModel = viewModel(factory = factory)
 
             val userId = authViewModel.getCurrentUserId()
             CustomizationFlow(
-//                viewModel = customizationViewModel,
                 cartViewModel = cartViewModel,
                 userId = userId,
                 onComplete = {
