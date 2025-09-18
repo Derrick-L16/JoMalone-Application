@@ -1,0 +1,9 @@
+# Gradle cache
+.gradle/
+# Build outputs
+/build/
+# IDE files
+.idea/
+*.iml
+# Local properties
+local.properties

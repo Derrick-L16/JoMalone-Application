@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "614649367668",
+    "project_id": "jomalone-appp",
+    "storage_bucket": "jomalone-appp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614649367668:android:7b00773eed67c25fcb5521",
+        "android_client_info": {
+          "package_name": "com.example.jomalone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE3_g4qVbU0ajEnVjMY7hglZuofO07iBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614649367668:android:7af9a18f021b3ad6cb5521",
+        "android_client_info": {
+          "package_name": "com.example.jomalonemobileapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE3_g4qVbU0ajEnVjMY7hglZuofO07iBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

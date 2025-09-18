@@ -1,0 +1,106 @@
+<resources>
+    <string name="app_name">Jo Malone Mobile Application</string>
+
+    // Scent Quiz Strings
+    <string name="scent_quiz_title">Fragrance Match Quiz</string>
+
+    <string name="mood_title">Mood &amp; Personality Test</string>
+    <string name="question1">1. What mood do you want your scent to reflect today?</string>
+    <string name="q1_opt1">Calm and peaceful</string>
+    <string name="q1_opt2">Bold and confident</string>
+    <string name="q1_opt3">Romantic and soft</string>
+    <string name="q1_opt4">Fresh and energetic</string>
+
+    <string name="question2">2. Which word best describes your personality?</string>
+    <string name="q2_opt1">Elegant</string>
+    <string name="q2_opt2">Free-spirited</string>
+    <string name="q2_opt3">Mysterious</string>
+    <string name="q2_opt4">Playful</string>
+
+    <string name="question3">3. Where would you most like to spend your weekend?</string>
+    <string name="garden_text">Garden</string>
+    <string name="beach_text">Beach</string>
+    <string name="roof_top_text">Roof Top</string>
+    <string name="cafe_text">Cafe</string>
+
+
+    <string name="question4">4. What time of day do you usually wear perfume?</string>
+    <string name="q4_opt1">Morning</string>
+    <string name="q4_opt2">Afternoon</string>
+    <string name="q4_opt3">Evening</string>
+    <string name="q4_opt4">Special occasions only</string>
+
+    <string name="preference_title">Scent Preferences</string>
+    <string name="question5">Which scent note do you usually enjoy the most?</string>
+    <string name="q5_opt1">Citrus &amp; fresh</string>
+    <string name="q5_opt2">Floral</string>
+    <string name="q5_opt3">Woody &amp; earthy</string>
+    <string name="q5_opt4">Spicy or oriental</string>
+
+    <string name="question6">6. Which one is your favourite colour?</string>
+    <string name="pink_color">Pink</string>
+    <string name="blue_color">Blue</string>
+    <string name="green_color">Green</string>
+    <string name="gold_color">Gold</string>
+
+    <string name="occasion_title">Occasion of Use</string>
+    <string name="question7">What’s your purpose for this scent?</string>
+    <string name="q7_opt1">Everyday wear</string>
+    <string name="q7_opt2">Romantic date</string>
+    <string name="q7_opt3">Gift for someone</string>
+    <string name="q7_opt4">Luxury treat for myself</string>
+
+    <string name="question8">8. How long do you want the scent to last?</string>
+    <string name="q8_opt1">Fresh &amp; Short (2–3 hours)</string>
+    <string name="q8_opt2">Moderate (4–6 hours)</string>
+    <string name="q8_opt3">Long-lasting (6–8 hours)</string>
+    <string name="q8_opt4">Intense &amp; All-day (8+ hours)</string>
+
+    <string name="previous_button">Previous</string>
+    <string name="next_button">Next</string>
+
+    <string name="match_summary_title">Fragrance Match Summary</string>
+    <string name="signature_scent_title">Your Signature Scent</string>
+    <string name="recommended_text">Recommended Perfume</string>
+
+    <string name="go_main">Done and Go Back to Main Page</string>
+    <string name="customize_button">Customize Your Fragrance</string>
+    <string name="retake_quiz_button">Retake Quiz</string>
+
+    // Scent Customization Strings
+    <string name="customization_title">Fragrance Customization</string>
+    <string name="message">Didn\'t find your perfect perfume?\nMake your own one!</string>
+
+    <string name="base_note_question">1. Select your Signature Base Scent</string>
+    <string name="base_note_opt1">Lime Basil</string>
+    <string name="base_note_opt2">Peony</string>
+    <string name="base_note_opt3">English Pear</string>
+    <string name="base_note_opt4">Wood Sage</string>
+
+    <string name="layering_question">2. Choose a Layering Essence</string>
+    <string name="layering_opt1">Honey</string>
+    <string name="layering_opt2">Orange Blossom</string>
+    <string name="layering_opt3">Tonka Bean</string>
+    <string name="layering_opt4">Read Roses</string>
+
+    <string name="experience_question">3. How you wish to experience this scent?</string>
+    <string name="experience_opt1">Day</string>
+    <string name="experience_opt2">Night</string>
+    <string name="experience_opt3">Gifting</string>
+    <string name="experience_opt4">Self-love ritual</string>
+
+    <string name="give_name_prompt">Give your custom perfume a special name</string>
+    <string name="review_message">Review your creation</string>
+
+    <string name="thank_you">Thank you for your support.</string>
+    <string name="prepare_message">Your bespoke fragrance is added to cart now.</string>
+    <!--    <string name="prepare_message">Your bespoke fragrance is being prepared and will be ready shortly.</string>-->
+    <string name="appreciate_message">We appreciate your patience as we complete the final touches</string>
+
+    <string name="add_cart_title">Add Cart Confirmation</string>
+    <string name="add_to_cart_button">Yes, Add to Cart</string>
+    <string name="confirm_add_cart">Do you want to add this to cart?</string>
+    <string name="back_to_main_button">No, Save &amp; back to Main Page</string>
+
+
+</resources>
