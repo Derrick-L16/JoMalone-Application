@@ -162,7 +162,7 @@ fun SuccessDialog(
     onContinue: () -> Unit
 ){
     Dialog(
-        onDismissRequest = { /* Prevent dismissing by clicking outside */ }
+        onDismissRequest = { } // Prevent dismissing by clicking outside
     ) {
         Card(
             modifier = Modifier
