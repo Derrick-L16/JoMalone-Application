@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 
 data class CustomizationState(
     val selectedOptions: Map<ScentLayer, CustomizationOption> = emptyMap(),
@@ -113,7 +111,7 @@ class CustomizationViewModel(
             _uiState.value = CustomizationState(selectedOptions = emptyMap(),customPerfumeName = "", isCustomizationComplete = false) // Reset UI state
             _navigationState.value = CustomizationNavigationState(currentScreen = CustomizationScreen.QUESTIONS,
                 currentQuestionIndex = 0
-            ) // Reset navigation state
+            )
         }
     }
 

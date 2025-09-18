@@ -17,18 +17,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.theme.Cormorant
 import com.example.jomalonemobileapplication.feature.login.ui.AuthViewModel
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentType
-import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentTestResult
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentResultRepository
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.DarkBrown
@@ -100,7 +97,8 @@ fun ScentPreferenceScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors( containerColor = Background)
             )
-        }
+        },
+        containerColor = Background
     ) { innerPadding ->
         Column(
             modifier = modifier
@@ -121,7 +119,6 @@ fun ScentPreferenceScreen(
                 if (scentType != null) {
                     val result = ScentResultRepository.getResultDescription(scentType)
 
-                    // Display the scent preference
                     Text(
                         text = "Your Current Scent Preference",
                         fontFamily = Cormorant,

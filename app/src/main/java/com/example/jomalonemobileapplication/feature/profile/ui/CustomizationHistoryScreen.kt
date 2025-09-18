@@ -58,6 +58,7 @@ import com.example.jomalonemobileapplication.core.data.repository.CartRepository
 import com.example.jomalonemobileapplication.core.ui.CartViewModel
 import com.example.jomalonemobileapplication.core.ui.CartViewModelFactory
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.data.repository.CustomizationHistoryRepository
+import kotlinx.coroutines.launch
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
 import com.example.jomalonemobileapplication.theme.Cream
@@ -76,12 +77,11 @@ fun CustomizationHistoryScreen(
     onBack: () -> Unit
 ) {
 
-    // Local Database Setup
+    // local database
     val context = LocalContext.current
     val database = remember { AppDatabase.getDatabase(context) }
     val repository = remember { CustomizationHistoryRepository(database.customizationDao()) }
 
-    // Cart setup
     val cartRepository = remember {
         CartRepositoryImpl(database.cartItemDao(), CartItemMapper())
     }
@@ -203,7 +203,6 @@ fun CustomizationHistoryScreen(
                 }
             } else {
                 items(customizations) { customization ->
-//                    CustomizationHistoryCard(customization)
                     CustomizationHistoryCard(
                         customization = customization,
                         onDeleteClick = {
@@ -226,11 +225,6 @@ fun CustomizationHistoryScreen(
                                 }
                                 showSuccessDialog = true
                             }
-//                            coroutineScope.launch {
-//                                val updatedCustomization = customization.copy(isAddedToCart = true)
-//                                repository.updateCustomization(updatedCustomization)
-//                                showSuccessDialog = true
-//                            }
                         },
                         onShareClick = { shareCustomization(context, customization) }
                     )
@@ -332,8 +326,6 @@ fun CustomizationHistoryCard(
             CustomizationDetailRow("Essence", customization.essence)
             CustomizationDetailRow("Experience", customization.experience)
 
-            // Add to Cart button (only show if not already added)
-//            if (!customization.isAddedToCart) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onAddToCartClick,
@@ -347,7 +339,6 @@ fun CustomizationHistoryCard(
             ) {
                 Text("Add to Cart - RM 200.00")
             }
-//            }
         }
     }
 }
@@ -371,7 +362,6 @@ fun shareCustomization(context: android.content.Context, customization: Customiz
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, shareText)
         putExtra(Intent.EXTRA_SUBJECT, "Check out my custom Jo Malone perfume!")
-
     }
 
     val chooser = Intent.createChooser(shareIntent, "Share your custom perfume")

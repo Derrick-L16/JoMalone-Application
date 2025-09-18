@@ -1,4 +1,4 @@
-package com.example.jomalonemobileapplication.scentTest.data.repository
+package com.example.jomalonemobileapplication.feature.scentTest.data.repository
 
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.feature.scentTest.domain.model.QuestionType

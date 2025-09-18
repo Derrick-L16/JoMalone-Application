@@ -1,18 +1,13 @@
 package com.example.jomalonemobileapplication.feature.perfumeCustomization.data.repository
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jomalonemobileapplication.core.data.dao.CustomizationDao
 import com.example.jomalonemobileapplication.core.data.entity.CustomizationEntity
-import com.example.jomalonemobileapplication.feature.login.ui.AuthViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.flow.first
-
 
 class CustomizationHistoryRepository(
     private val customizationDao: CustomizationDao
@@ -21,7 +16,7 @@ class CustomizationHistoryRepository(
     private val customizationsCollection = firestore.collection("customizations")
     
 
-    // Local Database Operations
+    // Local database
     fun getCustomizationsByUserLocal(userId: String): Flow<List<CustomizationEntity>> {
         return customizationDao.getCustomizationsByUser(userId)
     }
@@ -41,7 +36,7 @@ class CustomizationHistoryRepository(
                     val customizations = snapshot.documents.mapNotNull { document ->
                         try {
                             CustomizationEntity(
-                                id = 0, // Room will auto-generate this
+                                id = 0,
                                 userId = document.getString("userId") ?: "",
                                 perfumeName = document.getString("perfumeName") ?: "",
                                 baseNote = document.getString("baseNote") ?: "",
@@ -65,10 +60,9 @@ class CustomizationHistoryRepository(
     }
 
     suspend fun saveCustomization(customization: CustomizationEntity) {
-        // Save to local database
+        // save to local database
         customizationDao.insertCustomization(customization)
 
-        // Save to Firebase
         try {
             val customizationData = mapOf(
                 "userId" to customization.userId,
@@ -85,7 +79,6 @@ class CustomizationHistoryRepository(
                 .set(customizationData)
                 .await()
         } catch (e: Exception) {
-            // If Firebase fails, at least we have local copy
             println("Failed to save to Firebase: ${e.message}")
         }
     }
@@ -93,7 +86,6 @@ class CustomizationHistoryRepository(
     suspend fun getLatestCustomization(userId: String): CustomizationEntity? {
         return customizationDao.getLatestCustomization(userId)
     }
-
 
     suspend fun updateCustomization(customization: CustomizationEntity) {
         customizationDao.updateCustomization(customization)
@@ -119,7 +111,6 @@ class CustomizationHistoryRepository(
     suspend fun deleteCustomization(customization: CustomizationEntity) {
         customizationDao.deleteCustomization(customization)
 
-        // Delete from Firebase
         try {
             customizationsCollection
                 .document("${customization.userId}_${customization.createdAt}")

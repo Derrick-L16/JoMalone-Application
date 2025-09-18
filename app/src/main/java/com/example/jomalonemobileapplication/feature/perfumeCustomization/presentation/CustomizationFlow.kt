@@ -18,7 +18,6 @@ import com.example.jomalonemobileapplication.feature.perfumeCustomization.data.r
 @SuppressLint("RememberReturnType")
 @Composable
 fun CustomizationFlow(
-//    viewModel: CustomizationViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
     userId: String?,
     onComplete: () -> Unit,
@@ -38,12 +37,6 @@ fun CustomizationFlow(
     val navState by viewModel.navigationState.collectAsStateWithLifecycle()
     val questions = remember { CustomizationRepository.getCustomizationQuestions() }
     val isLastQuestion = navState.currentQuestionIndex == questions.size - 1 //
-
-//    LaunchedEffect(navState.currentScreen) {
-//        if (navState.currentScreen == CustomizationScreen.THANK_YOU) {
-//            onComplete()
-//        }
-//    }
 
     when (navState.currentScreen) {
         CustomizationScreen.QUESTIONS -> {

@@ -3,7 +3,7 @@ package com.example.jomalonemobileapplication.feature.scentTest.domain.model
 class ScentTestResult(
     val scentType : ScentType,
     val description: String,
-    val recommendedPerfumes: List<String> // List of perfume names or IDs
+    val recommendedPerfumes: List<String>
 )
 
 object ScentResultRepository{
