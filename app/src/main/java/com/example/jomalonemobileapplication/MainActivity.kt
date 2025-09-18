@@ -85,12 +85,14 @@ class MainActivity : ComponentActivity() {
 
                 // Define routes where you want to hide the bars
                 val routesWithoutBars = listOf(
+                    "ProfileInformation",
                     "SignIn",
                     "SignUp",
                     "ForgotPassword",
                     "Admin",
                     "ScentTest",
                     "PerfumeCustomization",
+                    "ContactUs",
                     "ScentPreference",
                     "CustomizationHistory"
                 )
