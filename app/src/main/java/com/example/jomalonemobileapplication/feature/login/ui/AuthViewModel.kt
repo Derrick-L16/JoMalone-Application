@@ -7,7 +7,6 @@ import com.example.jomalonemobileapplication.AppDatabase
 import com.example.jomalonemobileapplication.feature.login.data.AuthRepositoryImpl
 import com.example.jomalonemobileapplication.feature.login.data.UserEntity
 import com.example.jomalonemobileapplication.feature.profile.ui.DeleteAccountState
-import com.example.jomalonemobileapplication.feature.scentTest.domain.model.ScentType
 import com.google.firebase.auth.EmailAuthProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,9 +39,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _deleteAccountState = MutableStateFlow(DeleteAccountState())
     val deleteAccountState: StateFlow<DeleteAccountState> = _deleteAccountState.asStateFlow()
-
-    private val _showLogoutDialog = MutableStateFlow(false)
-    val showLogoutDialog: StateFlow<Boolean> = _showLogoutDialog.asStateFlow()
 
     // ===================================== COMBINED SIGN IN & SIGNUP FUNCTION(display error message on time) =====================================
     fun updateEmailOnTime(email: String, isSignUp: Boolean = false) {
@@ -527,6 +523,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    // ===================================== ACCOUNT DELETION FUNCTION =====================================
     // ===================================== DELETE ACCOUNT FUNCTIONS =====================================
     fun reauthenticateAndDelete(
         password: String,
@@ -601,20 +598,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _deleteAccountState.value = _deleteAccountState.value.copy(errorMessage = null)
     }
 
-    // ===================================== LOGOUT FUNCTION =====================================
-
-    fun showLogoutConfirmation() {
-        _showLogoutDialog.value = true
-    }
-
-    fun dismissLogoutConfirmation() {
-        _showLogoutDialog.value = false
-    }
-
-    fun performLogout() {
-        repository.signOut()
-        _showLogoutDialog.value = false
-    }
 
     // ===================================== UTILITY FUNCTION =====================================
     // Get user from local database

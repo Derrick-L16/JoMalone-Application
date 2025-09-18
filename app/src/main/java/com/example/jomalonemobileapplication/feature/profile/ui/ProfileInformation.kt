@@ -49,7 +49,7 @@ import com.example.jomalonemobileapplication.feature.login.ui.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileInformationScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.background(Background),
     onBack: () -> Unit = {},
     onSaveSuccess: () -> Unit = {},
 ) {
