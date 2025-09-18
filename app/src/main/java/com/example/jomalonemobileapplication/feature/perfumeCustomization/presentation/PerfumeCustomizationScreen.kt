@@ -3,32 +3,24 @@ package com.example.jomalonemobileapplication.feature.perfumeCustomization.prese
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
@@ -39,14 +31,12 @@ import com.example.jomalonemobileapplication.feature.perfumeCustomization.data.r
 @Composable
 fun PerfumeCustomizationScreen(
     modifier: Modifier = Modifier,
-//    viewModel: CustomizationViewModel = viewModel(),
     viewModel: CustomizationViewModel,
     onNavigateToMain: () -> Unit,
     onComplete: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val navState by viewModel.navigationState.collectAsStateWithLifecycle()
-//    val questions = remember { CustomizationRepository.getCustomizationQuestions() }
     val questions = CustomizationRepository.getCustomizationQuestions()
     val currentQuestionIndex = navState.currentQuestionIndex
     val currentQuestion = questions[currentQuestionIndex]
@@ -74,7 +64,6 @@ fun PerfumeCustomizationScreen(
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-//                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
@@ -99,11 +88,6 @@ fun PerfumeCustomizationScreen(
 
             item {
                 Spacer(modifier = Modifier.height(24.dp))
-//            Text(
-//                text = "Step ${uiState.currentQuestionIndex + 1} of ${questions.size}",
-//                fontSize = 16.sp,
-//                fontStyle = FontStyle.Italic
-//            )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -135,9 +119,6 @@ fun PerfumeCustomizationScreen(
                     if (!isFirstQuestion) {
                         Button(
                             onClick = { viewModel.moveToPreviousQuestion() },
-//                        colors = ButtonDefaults.buttonColors(
-//                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-//                        ),
                             shape = MaterialTheme.shapes.medium,
                         ) {
                             Text("Previous")
@@ -165,8 +146,6 @@ fun PerfumeCustomizationScreen(
     }
 }
 
-
-// PREVIEW
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable
 //fun FragranceCustomizationScreenPreview() {

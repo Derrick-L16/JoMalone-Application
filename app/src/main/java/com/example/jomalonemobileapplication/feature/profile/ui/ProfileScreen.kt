@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.feature.login.ui.AuthViewModel
+import com.example.jomalonemobileapplication.theme.Cream
 
 
 @Composable
@@ -57,6 +59,7 @@ fun ProfileContent(
     onNavigateToFavouritePerfume: () -> Unit = {},
     onNavigateToPaymentHistory: () -> Unit = {},
     onNavigateToContactUs: () -> Unit = {},
+    onNavigateToScentPreference: () -> Unit = {},
     onNavigateToCustomizationHistory: () -> Unit,
     onNavigateToLogout: () -> Unit = {},
     onAccountDeleted: () -> Unit = {},
@@ -64,6 +67,7 @@ fun ProfileContent(
     val viewModel: AuthViewModel = viewModel()
     val profileState by viewModel.userProfileState.collectAsState()
     val deleteState by viewModel.deleteAccountState.collectAsState()
+    val showLogoutDialog by viewModel.showLogoutDialog.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadUserProfile()
@@ -87,6 +91,18 @@ fun ProfileContent(
             onSuccessConfirmed = {
                 onAccountDeleted()
                 viewModel.cancelAccountDeletion() // reset the state
+            }
+        )
+    }
+
+    if (showLogoutDialog) {
+        LogoutConfirmationDialog(
+            onConfirm = {
+                viewModel.performLogout()
+                onNavigateToLogout()
+            },
+            onDismiss = {
+                viewModel.dismissLogoutConfirmation()
             }
         )
     }
@@ -122,6 +138,10 @@ fun ProfileContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        ScentPreferenceButton(onClick = onNavigateToScentPreference)
+
+        Spacer(modifier = Modifier.height(10.dp))
+
         CustomizationHistoryButton(onClick = onNavigateToCustomizationHistory)
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -134,8 +154,7 @@ fun ProfileContent(
         Spacer(modifier = Modifier.height(10.dp))
 
         LogoutButton(onClick = {
-            viewModel.signOut()
-            onNavigateToLogout()
+            viewModel.showLogoutConfirmation()
         })
     }
 }
@@ -152,7 +171,8 @@ fun UserProfileCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = Cream)
     ) {
         if (isLoading) {
             Box(
@@ -230,7 +250,7 @@ fun FavouritePerfumeButton(onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -258,7 +278,7 @@ fun PaymentHistoryButton(onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -286,7 +306,7 @@ fun ContactUsButton(onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -314,7 +334,7 @@ fun ScentPreferenceButton(onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -341,7 +361,7 @@ fun CustomizationHistoryButton(onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -372,7 +392,7 @@ fun DeleteAccountButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable(enabled = !isLoading) { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -400,7 +420,7 @@ fun LogoutButton(onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Color(0xFFFFFF6D5), shape = MaterialTheme.shapes.medium)
+            .background(color = Cream, shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically

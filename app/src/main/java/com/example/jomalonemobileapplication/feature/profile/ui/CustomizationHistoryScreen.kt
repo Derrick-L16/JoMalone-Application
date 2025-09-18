@@ -3,15 +3,43 @@ package com.example.jomalonemobileapplication.feature.profile.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,32 +51,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.AppDatabase
 import com.example.jomalonemobileapplication.core.data.entity.CustomizationEntity
 import com.example.jomalonemobileapplication.core.data.mapper.CartItemMapper
 import com.example.jomalonemobileapplication.core.data.repository.CartRepositoryImpl
-import com.example.jomalonemobileapplication.theme.*
 import com.example.jomalonemobileapplication.core.ui.CartViewModel
 import com.example.jomalonemobileapplication.core.ui.CartViewModelFactory
 import com.example.jomalonemobileapplication.feature.perfumeCustomization.data.repository.CustomizationHistoryRepository
-
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
 import com.example.jomalonemobileapplication.theme.Cream
 import com.example.jomalonemobileapplication.theme.DarkBrown
 import com.example.jomalonemobileapplication.theme.LightBrown
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,12 +77,11 @@ fun CustomizationHistoryScreen(
     onBack: () -> Unit
 ) {
 
-    // Local Database Setup
+    // local database
     val context = LocalContext.current
     val database = remember { AppDatabase.getDatabase(context) }
     val repository = remember { CustomizationHistoryRepository(database.customizationDao()) }
 
-    // Cart setup
     val cartRepository = remember {
         CartRepositoryImpl(database.cartItemDao(), CartItemMapper())
     }
@@ -185,7 +203,6 @@ fun CustomizationHistoryScreen(
                 }
             } else {
                 items(customizations) { customization ->
-//                    CustomizationHistoryCard(customization)
                     CustomizationHistoryCard(
                         customization = customization,
                         onDeleteClick = {
@@ -208,11 +225,6 @@ fun CustomizationHistoryScreen(
                                 }
                                 showSuccessDialog = true
                             }
-//                            coroutineScope.launch {
-//                                val updatedCustomization = customization.copy(isAddedToCart = true)
-//                                repository.updateCustomization(updatedCustomization)
-//                                showSuccessDialog = true
-//                            }
                         },
                         onShareClick = { shareCustomization(context, customization) }
                     )
@@ -314,8 +326,6 @@ fun CustomizationHistoryCard(
             CustomizationDetailRow("Essence", customization.essence)
             CustomizationDetailRow("Experience", customization.experience)
 
-            // Add to Cart button (only show if not already added)
-//            if (!customization.isAddedToCart) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onAddToCartClick,
@@ -329,7 +339,6 @@ fun CustomizationHistoryCard(
             ) {
                 Text("Add to Cart - RM 200.00")
             }
-//            }
         }
     }
 }
@@ -353,7 +362,6 @@ fun shareCustomization(context: android.content.Context, customization: Customiz
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, shareText)
         putExtra(Intent.EXTRA_SUBJECT, "Check out my custom Jo Malone perfume!")
-
     }
 
     val chooser = Intent.createChooser(shareIntent, "Share your custom perfume")

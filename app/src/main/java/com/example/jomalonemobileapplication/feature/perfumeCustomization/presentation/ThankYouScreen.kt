@@ -15,10 +15,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,11 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jomalonemobileapplication.R
 import com.example.jomalonemobileapplication.theme.Background
 import com.example.jomalonemobileapplication.theme.Cormorant
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jomalonemobileapplication.theme.DarkBrown
 import com.example.jomalonemobileapplication.theme.JoMaloneMobileApplicationTheme
 import com.example.jomalonemobileapplication.theme.LightBrown
